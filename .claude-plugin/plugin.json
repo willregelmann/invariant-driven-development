@@ -5,6 +5,7 @@
   "author": {
     "name": "Will Regelmann"
   },
+  "license": "MIT",
   "repository": "https://github.com/willregelmann/invariant-driven-development",
   "keywords": ["invariants", "intent", "greenfield", "design", "planning"]
 }

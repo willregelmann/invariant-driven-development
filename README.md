@@ -1,5 +1,7 @@
 # Invariant-Driven Development
 
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 An agent skill for starting a new product with a map: what it's for, what it's made of, what it does and who touches it, written as statements that must always hold.
 
 The map is an `invariants/` directory. It's meant to be enough, on its own, for a capable agent to build a working product of the right shape, while leaving how it's built open. It lives with the product, not with a feature.
@@ -55,3 +57,7 @@ skills/
 ```
 
 No build system, no dependencies. The artifacts are markdown files.
+
+## License
+
+MIT
