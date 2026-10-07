@@ -1,6 +1,6 @@
 ---
 name: map-invariants
-description: Maps a new product before anything is planned or built, by interviewing the user and writing an invariants/ directory (INTENT.md, then primitives, capabilities and interfaces, each a short file of statements that must always hold) — use when the user says "let's start a new project", "I want to build X", "new project", "map this out", or "write the invariants", or wants to add a primitive, capability or interface to an existing invariants/ directory. For greenfield work only. Stops at the map and does not plan or implement.
+description: Maps a new product before anything is planned or built, by interviewing the user and writing a docs/invariants/ directory (INTENT.md, then primitives, capabilities and interfaces, each a short file of statements that must always hold) — use when the user says "let's start a new project", "I want to build X", "new project", "map this out", or "write the invariants", or wants to add a primitive, capability or interface to an existing docs/invariants/ directory. For greenfield work only. Stops at the map and does not plan or implement.
 tags:
   - invariants
   - intent
@@ -10,7 +10,7 @@ tags:
 
 # Map Invariants
 
-Turn an idea into a map: an `invariants/` directory that says what the product is for, what it's made of, what it does and who touches it, as statements that must always hold.
+Turn an idea into a map: a `docs/invariants/` directory that says what the product is for, what it's made of, what it does and who touches it, as statements that must always hold.
 
 The directory has one job. It must be **enough, on its own, for a capable agent to build a working product of the right shape**, while leaving how it's built open. Two builders given only this directory should produce recognizably the same product, built differently.
 
@@ -21,10 +21,10 @@ It lives with the product for its whole life, not with a feature. This skill sto
 | Step | Job | Output |
 |------|-----|--------|
 | 1 | Listen, and check this is greenfield | A shared picture of the idea |
-| 2 | Intent | `invariants/INTENT.md` |
-| 3 | Primitives | `invariants/primitives/<NOUN>.md` |
-| 4 | Capabilities | `invariants/capabilities/<VERB>.md` |
-| 5 | Interfaces | `invariants/interfaces/<NAME>.md` |
+| 2 | Intent | `docs/invariants/INTENT.md`, and `docs/invariants/README.md` copied from the template |
+| 3 | Primitives | `docs/invariants/primitives/<NOUN>.md` |
+| 4 | Capabilities | `docs/invariants/capabilities/<VERB>.md` |
+| 5 | Interfaces | `docs/invariants/interfaces/<NAME>.md` |
 | 6 | Walk the map | Gaps closed, links resolve, nothing built-in |
 | 7 | Hand off | A short summary, then stop |
 
@@ -40,6 +40,8 @@ Work one layer at a time, in this order. Each layer uses the words the one befor
 | Primitives | What is it made of? | A singular noun | `MEMORY.md`, `DECK.md`, `QUESTION.md` |
 | Capabilities | What does it do with those things? | A verb | `RECALL.md`, `FORGET.md`, `ANSWER.md` |
 | Interfaces | Who or what touches it from outside, and what passes between them? | The name of the other side | `USER.md`, `AGENT.md`, `HOST.md`, `SCHEDULE.md` |
+
+The layers organize the map, not the code. A primitive is not a data type and a capability is not a service. A build can put a capability's rules inside the things it acts on, split one primitive across several types, or merge several into one. The map says what holds. Where in the code it holds is the builder's call. So a primitive file never reads as a list of fields, and a capability file never reads as a function signature.
 
 ## What Counts as an Invariant
 
@@ -60,6 +62,8 @@ An invariant is a statement about the product that is true at every moment, in e
 | "Errors are handled gracefully" | Any builder would say this | "Recall that fails says it failed. An agent is never shown 'nothing relevant' when the mind wasn't searched." |
 
 **Naming a technology.** Name one only when the product must *meet* it: a runtime it has to live inside, a system it has to talk to, a format the user insists on. Never name one the product is merely *built with*. The test: swap it out. If what's left is the same product built differently, it doesn't belong here.
+
+**Across primitives.** An invariant that ties two or more primitives together says when it holds: at every moment, or restored after each change and by when. "A deck's slide count always matches its slides" and "a deck's slide count catches up before anyone next opens it" are different products to someone watching. Both pass the Always test, because each says what is true at every moment. Ask when the user would mind which. When they wouldn't, write the one that catches up: it's the weaker promise, and a build that holds the stronger one keeps it too.
 
 **Numbers.** State the limit, not its value. "Strictly limited per conversation" survives every build. A number is a tuning decision that a build makes and measures.
 
@@ -85,14 +89,14 @@ Let the user describe what they want. Restate it in two or three sentences so th
 Check the ground:
 
 - **Source code already here?** This skill maps products that don't exist yet, before any architectural decision. Say so, and ask how to proceed.
-- **`invariants/` already here?** Go to [Changing the Map](#changing-the-map).
+- **`docs/invariants/` already here?** Go to [Changing the Map](#changing-the-map).
 - **A prototype or earlier attempt?** Read it for what turned out to matter, not for how it worked. Keep the consequence and drop the cause: "empty audio clips deadlock the player" becomes "silence is never ambiguous". A later build is expected to rediscover the details, and that is intended.
 
 Don't research stacks, libraries or architectures. Research into the problem itself is fine when the user asks for it.
 
 ### 2. Intent
 
-Draft `invariants/INTENT.md` from what the user said, and ask only for what's missing. It's an elevator pitch: about ten lines of prose with no sections, no lists and no mechanism.
+Draft `docs/invariants/INTENT.md` from what the user said, and ask only for what's missing. It's an elevator pitch: about ten lines of prose with no sections, no lists and no mechanism.
 
 ```markdown
 # <Name>
@@ -118,6 +122,8 @@ thing it exists to do.
 
 Show the draft and get agreement before going on.
 
+When you write `INTENT.md`, also copy [templates/README.md](templates/README.md) to `docs/invariants/README.md`, word for word. It tells an agent that has never seen this skill what the directory is and how to read it. It is the same in every product, so it is never drafted, discussed or edited per product, and the rules for the map's other files don't apply to it.
+
 ### 3. Primitives
 
 A primitive is a thing the product is made of, and that would exist in any implementation of it. You'd need the word to explain the product to someone.
@@ -125,6 +131,7 @@ A primitive is a thing the product is made of, and that would exist in any imple
 Propose the list before writing files: each name, one line on what it is, and why it's its own thing. Also list what you considered and folded in. Expect three to six.
 
 - **Collapse hard.** For every pair, ask if they're different kinds of thing, or the same kind in different circumstances. If what separates them is how they came to be or how they're connected, they're one primitive, and its description says so. An observation, a belief and a concept are all memories. A prepared slide and one sketched ten seconds ago are both slides.
+- **Don't collapse one word with two meanings.** Before merging, check the opposite case: the same word meaning different things in different parts of the product. If a "policy" as billing sees it and a "policy" as underwriting sees it hold different things and follow different rules, they are two primitives, even when they share an identity. Give each its own name, and say in each description how it relates to the other. If many words split this way, the idea may be more than one product. Say so to the user.
 - **Not primitives:** a field of something else, a storage structure, a screen, or anyone who uses the product. A person is an interface. What the product keeps about them is a primitive: the user is an interface, and their mind is a primitive.
 
 Each file:
@@ -197,6 +204,7 @@ Read the whole directory once, as a builder who has nothing else.
 - **Primitives are used.** Each one is read or changed by at least one capability. If not, it isn't a primitive or a capability is missing.
 - **Capabilities are reachable.** Each one is started and observed through at least one interface.
 - **Intent is carried.** Each promise in `INTENT.md` is held up by at least one invariant, and you can name the invariants that stop the failure sentence from coming true.
+- **Timing is said.** Each invariant that ties primitives together says whether it holds at every moment or catches up, and by when.
 - **Nothing collides.** No two invariants contradict. The same rule appearing in two files says the same thing.
 - **Nothing is built in.** Search for storage, libraries, algorithms, protocols and file layouts. Apply the swap test to each.
 - **The guess test.** Ask: "If this directory were all I had, what would I have to guess that the user would mind me guessing wrong?" Each answer is a missing invariant or a question for the user.
@@ -211,9 +219,9 @@ Then stop. Don't write a plan, pick a stack, scaffold a repository or start buil
 
 ## Changing the Map
 
-When `invariants/` exists, the map is the product's, so a new feature changes the map in place. There is no per-feature file.
+When `docs/invariants/` exists, the map is the product's, so a new feature changes the map in place. There is no per-feature file.
 
-1. Read the whole directory first.
+1. Read the whole directory first. If `README.md` is missing, copy it from the template. If it differs from the template, show the user the difference and ask before replacing it.
 2. Say which layer the change lands in. Most features add or change a primitive or a capability. A change to `INTENT.md` means it's becoming a different product, so confirm that explicitly.
 3. Propose the change as a list of files added, edited and removed, and get agreement.
 4. Edit in place. Files say what is true now, with no history, dates or "previously". When a primitive is replaced, delete its file and fix every link to it.
@@ -235,6 +243,7 @@ When `invariants/` exists, the map is the product's, so a new feature changes th
 - **Letting implementation in.** A database, a framework or a wire format in an invariant closes a decision the map exists to leave open.
 - **Listing features.** "Supports search" says what's there. An invariant says what must hold about it.
 - **Too many primitives.** Separate primitives for things that differ only in origin or circumstance produce a build with needless types. Collapse them.
+- **One primitive for two meanings.** The reverse of too many primitives. A word that means different things in different parts of the product, merged into one file, gives a build one bloated type that serves every part badly.
 - **Capabilities with nobody to call them.** Writing interfaces last makes it easy to skip the check that each capability is reachable.
 - **Leaving judgment unbounded.** "The agent decides when to ask" with no fixed guarantee beside it gives a build that may never ask, or always ask.
 - **Stating the obvious.** Invariants any capable builder would honour anyway bury the ones that matter.

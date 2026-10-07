@@ -4,13 +4,13 @@
 
 An agent skill for starting a new product with a map: what it's for, what it's made of, what it does and who touches it, written as statements that must always hold.
 
-The map is an `invariants/` directory. It's meant to be enough, on its own, for a capable agent to build a working product of the right shape, while leaving how it's built open. It lives with the product, not with a feature.
+The map is a `docs/invariants/` directory. It's meant to be enough, on its own, for a capable agent to build a working product of the right shape, while leaving how it's built open. It lives with the product, not with a feature.
 
 ## Skills
 
 | Skill | What it does |
 |-------|-------------|
-| [map-invariants](skills/map-invariants/SKILL.md) | Interviews you about a new product and writes `invariants/`, one layer at a time, then stops |
+| [map-invariants](skills/map-invariants/SKILL.md) | Interviews you about a new product and writes `docs/invariants/`, one layer at a time, then stops |
 
 ## Install
 
@@ -26,7 +26,8 @@ The skill activates when you say something like "let's start a new project, I wa
 ## The Map
 
 ```
-invariants/
+docs/invariants/
+  README.md              how to read the map, copied from a standard template
   INTENT.md              what it's for, and what would make it pointless
   primitives/<NOUN>.md   what it's made of
   capabilities/<VERB>.md what it does with those things
@@ -53,7 +54,9 @@ It stops at the map. Choosing a stack, writing a plan and writing code are separ
   plugin.json        # plugin manifest
   marketplace.json   # single-plugin marketplace, so the repo installs itself
 skills/
-  map-invariants/SKILL.md
+  map-invariants/
+    SKILL.md
+    templates/README.md  # copied unchanged into every map
 ```
 
 No build system, no dependencies. The artifacts are markdown files.
